@@ -31,14 +31,43 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 @Slf4j
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig {
+//public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .anyRequest().authenticated();
-        http
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeRequests()
+//                .anyRequest().authenticated();
+//        http
+//                .formLogin()
+////                .loginPage("/loginPage") //사용자가 인증을 해야되는 페이지
+//                .defaultSuccessUrl("/")
+//                .failureUrl("/login")
+//                .loginProcessingUrl("/login_proc")
+//                .usernameParameter("userId")
+//                .passwordParameter("passwd")
+//                .successHandler(new AuthenticationSuccessHandler() {
+//                    @Override
+//                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//                        log.error("{}", authentication.getName());
+//                        response.sendRedirect("/");
+//                    }
+//                })
+//                .failureHandler(new AuthenticationFailureHandler() {
+//                    @Override
+//                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+//                        log.error("{}", exception.getMessage());
+//                        response.sendRedirect("/login");
+//                    }
+//                })
+//                .permitAll();
+//    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        http.authorizeRequests((authz)->authz.anyRequest()
+                        .authenticated())
                 .formLogin()
 //                .loginPage("/loginPage") //사용자가 인증을 해야되는 페이지
                 .defaultSuccessUrl("/")
@@ -60,36 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                         response.sendRedirect("/login");
                     }
                 })
-                .permitAll();
+                .permitAll()
+        ;
+        return http.build();
     }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-//        http.authorizeRequests((authz)->authz.anyRequest()
-//                        .authenticated())
-//                .formLogin()
-//                .loginPage("/loginPage") //사용자가 인증을 해야되는 페이지
-//                .defaultSuccessUrl("/")
-//                .failureUrl("/login")
-//                .loginProcessingUrl("/login_proc")
-//                .usernameParameter("userId")
-//                .passwordParameter("passwd")
-//                .successHandler(new AuthenticationSuccessHandler() {
-//                    @Override
-//                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-//                        log.error("{}", authentication.getName());
-//                        response.sendRedirect("/");
-//                    }
-//                })
-//                .failureHandler(new AuthenticationFailureHandler() {
-//                    @Override
-//                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-//                        log.error("{}", exception.getMessage());
-//                        response.sendRedirect("/login");
-//                    }
-//                })
-//                .permitAll()
-//        ;
-//        return http.build();
-//    }
 }
