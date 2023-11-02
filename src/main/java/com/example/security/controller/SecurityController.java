@@ -21,4 +21,9 @@ public class SecurityController {
     public String index(){
         return "Home";
     }
+
+    @GetMapping("loginPage")
+    public String loginPage(){
+        return "loginPage";
+    }
 }
