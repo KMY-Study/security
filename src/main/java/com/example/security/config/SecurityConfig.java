@@ -31,23 +31,16 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 @Slf4j
-public class SecurityConfig{
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .anyRequest().authenticated();
-//        http
-//                .formLogin();
-//    }
+public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.authorizeRequests((authz)->authz.anyRequest()
-                        .authenticated())
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .anyRequest().authenticated();
+        http
                 .formLogin()
-                .loginPage("/loginPage") //사용자가 인증을 해야되는 페이지
+//                .loginPage("/loginPage") //사용자가 인증을 해야되는 페이지
                 .defaultSuccessUrl("/")
                 .failureUrl("/login")
                 .loginProcessingUrl("/login_proc")
@@ -67,8 +60,36 @@ public class SecurityConfig{
                         response.sendRedirect("/login");
                     }
                 })
-                .permitAll()
-        ;
-        return http.build();
+                .permitAll();
     }
+
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+//        http.authorizeRequests((authz)->authz.anyRequest()
+//                        .authenticated())
+//                .formLogin()
+//                .loginPage("/loginPage") //사용자가 인증을 해야되는 페이지
+//                .defaultSuccessUrl("/")
+//                .failureUrl("/login")
+//                .loginProcessingUrl("/login_proc")
+//                .usernameParameter("userId")
+//                .passwordParameter("passwd")
+//                .successHandler(new AuthenticationSuccessHandler() {
+//                    @Override
+//                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//                        log.error("{}", authentication.getName());
+//                        response.sendRedirect("/");
+//                    }
+//                })
+//                .failureHandler(new AuthenticationFailureHandler() {
+//                    @Override
+//                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+//                        log.error("{}", exception.getMessage());
+//                        response.sendRedirect("/login");
+//                    }
+//                })
+//                .permitAll()
+//        ;
+//        return http.build();
+//    }
 }
