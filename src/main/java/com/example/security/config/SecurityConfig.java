@@ -113,6 +113,12 @@ public class SecurityConfig {
                         log.error("{}", "logout Success!");
                     }
                 });
+//        http.rememberMe()
+//                .rememberMeParameter("remember") // remember-me default paramter name
+//                .tokenValiditySeconds(3600) // default 14일
+//                .alwaysRemember(true) // remember-me 기능이 항상 실행되도록( 비활성화때도 )
+//                .userDetailsService(userDetailsService) //?
+//        ;
         return http.build();
     }
 }
