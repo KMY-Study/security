@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -126,14 +127,29 @@ public class SecurityConfig {
                 .alwaysRemember(true) // remember-me 기능이 항상 실행되도록( 비활성화때도 )
                 .userDetailsService(userDetailsService) //
         ;
-        // 최대 세션 허용 개수 초과시,
-        // 1. 이전 사용자 세션 만료 정책
-        // 2. 현재 이용자 인증 실패 정책
+        // 동시세션제어
+        // 최대 세션 허용 개수 초과시  1. 이전 사용자 세션 만료 정책
+        //                       2. 현재 이용자 인증 실패 정책
         http.sessionManagement()
                 .invalidSessionUrl("/invalid")//session이 유용하지 않을떄 이동할 페이지
                 .maximumSessions(1)//최대허용 가능 세션 수 , -1:무제한세션허용
                 .maxSessionsPreventsLogin(true)//동시로그인 차단 -> 인증실패 및 세션생성실패, false:기존세션만료(default)
                 .expiredUrl("/expired")//세션이 만료될 경우 이동할 페이지
+        ;
+        // 세션고정공격보호
+        http.sessionManagement()
+                .sessionFixation().changeSessionId() // 기본값 default : 사용자 인증성공시 그사용자 sessions은 그대로, sessionId만 변경 servlet 3.1 이상
+                                                     // none:세션아이디 세선고정공격에 노출, 공격자의 session 고정값에 의한 공격노출
+                                                     // migrateSession : sevlet 3.1 이하 default
+                                                     // newSession:이전세션의 속성값 사용X
+        ;
+        // 세션정책
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                                //        SessionCreationPolicy. Always : 스프링 시큐리티가 항상 세션 생성
+                                //        SessionCreationPolicy. If_Required : 스프링 시큐리티가 필요 시 생성(기본값)
+                                //        SessionCreationPolicy. Never : 스프링 시큐리티가 생성하지 않지만 이미 존재하면 사용
+                                //        SessionCreationPolicy. Stateless : 스프링 시큐리티가 생성하지 않고 존재해도 사용하지 않음 , (JWT로 사용할때, 설정필요)
         ;
         return http.build();
     }
