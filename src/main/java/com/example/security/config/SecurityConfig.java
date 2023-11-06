@@ -77,8 +77,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.authorizeRequests((authz)->authz.anyRequest()
                         .authenticated());
-        http
-                .formLogin()
+
+        http.formLogin()
 //                .loginPage("/loginPage") //사용자가 인증을 해야되는 페이지
                 .defaultSuccessUrl("/")
                 .failureUrl("/login")
@@ -118,7 +118,8 @@ public class SecurityConfig {
                     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                         log.error("{}", "logout Success!");
                     }
-                });
+                })
+        ;
         http.rememberMe()
                 .rememberMeParameter("remember") // remember-me default paramter name
                 .tokenValiditySeconds(3600) // default 14일
@@ -129,7 +130,8 @@ public class SecurityConfig {
                 .invalidSessionUrl("/invalid")//session이 유용하지 않을떄 이동할 페이지
                 .maximumSessions(1)//최대허용 가능 세션 수 , -1:무제한세션허용
                 .maxSessionsPreventsLogin(true)//동시로그인 차단, false:기존세션만료(default)
-                .expiredUrl("/expired");//세션이 만료될 경우 이동할 페이지
+                .expiredUrl("/expired")
+        ;//세션이 만료될 경우 이동할 페이지
         return http.build();
     }
 }
