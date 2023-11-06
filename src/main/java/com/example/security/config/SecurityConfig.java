@@ -125,6 +125,11 @@ public class SecurityConfig {
                 .alwaysRemember(true) // remember-me 기능이 항상 실행되도록( 비활성화때도 )
                 .userDetailsService(userDetailsService) //
         ;
+        http.sessionManagement()
+                .invalidSessionUrl("/invalid")//session이 유용하지 않을떄 이동할 페이지
+                .maximumSessions(1)//최대허용 가능 세션 수 , -1:무제한세션허용
+                .maxSessionsPreventsLogin(true)//동시로그인 차단, false:기존세션만료(default)
+                .expiredUrl("/expired");//세션이 만료될 경우 이동할 페이지
         return http.build();
     }
 }
