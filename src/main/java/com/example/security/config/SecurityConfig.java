@@ -126,12 +126,15 @@ public class SecurityConfig {
                 .alwaysRemember(true) // remember-me 기능이 항상 실행되도록( 비활성화때도 )
                 .userDetailsService(userDetailsService) //
         ;
+        // 최대 세션 허용 개수 초과시,
+        // 1. 이전 사용자 세션 만료 정책
+        // 2. 현재 이용자 인증 실패 정책
         http.sessionManagement()
                 .invalidSessionUrl("/invalid")//session이 유용하지 않을떄 이동할 페이지
                 .maximumSessions(1)//최대허용 가능 세션 수 , -1:무제한세션허용
-                .maxSessionsPreventsLogin(true)//동시로그인 차단, false:기존세션만료(default)
-                .expiredUrl("/expired")
-        ;//세션이 만료될 경우 이동할 페이지
+                .maxSessionsPreventsLogin(true)//동시로그인 차단 -> 인증실패 및 세션생성실패, false:기존세션만료(default)
+                .expiredUrl("/expired")//세션이 만료될 경우 이동할 페이지
+        ;
         return http.build();
     }
 }
