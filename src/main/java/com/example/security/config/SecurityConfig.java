@@ -1,5 +1,6 @@
 package com.example.security.config;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -33,9 +36,12 @@ import java.io.IOException;
  */
 @Configuration
 //@EnableWebSecurity
+@RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig {
 //public class SecurityConfig extends WebSecurityConfigurerAdapter{
+
+    private final UserDetailsService userDetailsService;
 
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
@@ -113,12 +119,12 @@ public class SecurityConfig {
                         log.error("{}", "logout Success!");
                     }
                 });
-//        http.rememberMe()
-//                .rememberMeParameter("remember") // remember-me default paramter name
-//                .tokenValiditySeconds(3600) // default 14일
-//                .alwaysRemember(true) // remember-me 기능이 항상 실행되도록( 비활성화때도 )
-//                .userDetailsService(userDetailsService) //?
-//        ;
+        http.rememberMe()
+                .rememberMeParameter("remember") // remember-me default paramter name
+                .tokenValiditySeconds(3600) // default 14일
+                .alwaysRemember(true) // remember-me 기능이 항상 실행되도록( 비활성화때도 )
+                .userDetailsService(userDetailsService) //
+        ;
         return http.build();
     }
 }
