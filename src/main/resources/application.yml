@@ -3,3 +3,15 @@ spring:
     user:
       name: user
       password: 1111
+
+server:
+  port: 58080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: true
